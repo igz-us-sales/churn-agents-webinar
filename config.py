@@ -2,10 +2,13 @@ from pydantic import BaseModel
 
 
 class MainConfig(BaseModel):
-    source_url: str = "store://datasets/mlrun-quick-start/heart#0:latest"
-    label_column: str = "target"
+    source_url: str = "store://datasets/churn-agents-webinar/churn#0:latest"
+    label_column: str = "churn"
     allow_validation_failure: bool = True
-    ohe_columns: list = ["sex", "cp", "slope", "thal", "restecg"]
     test_size: float = 0.2
+    model_name: str = "churn_model"
+    sentiment_column: str = "sentiment_label"
+    ordinal_columns: list = ["international_plan", "voice_mail_plan"]
+    drop_columns: list = ["area_code", "chat_log", "state"]
 
 workflow_configs = {"main": MainConfig()}

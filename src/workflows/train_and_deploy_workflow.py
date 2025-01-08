@@ -111,7 +111,7 @@ def pipeline(
             {
                 "key": model_name,
                 "model_path": train.outputs["model_uri"],
-                "class_name" : "ClassifierModel"
+                "class_name" : "ChurnModel"
             }
         ],
     ).after(validate_model)
