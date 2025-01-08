@@ -1,0 +1,48 @@
+kind: project
+metadata:
+  name: heart-disease-classifier
+  created: '2025-01-07T22:39:30.803000'
+status:
+  state: online
+spec:
+  workflows:
+  - path: src/workflows/train_and_deploy_workflow.py
+    name: main
+  functions:
+  - url: src/functions/data.py
+    name: data
+    kind: job
+    with_repo: true
+  - url: src/functions/train.py
+    name: train
+    kind: job
+    image: mlrun/mlrun
+    handler: train_model
+  - url: src/functions/validate.py
+    name: validate
+    kind: job
+  - url: src/functions/v2_model_server.py
+    name: serving
+    kind: serving
+    image: mlrun/mlrun
+  - url: src/functions/v2_model_tester.py
+    name: model-server-tester
+    kind: job
+    handler: model_server_tester
+  conda: ''
+  build:
+    image: .mlrun-project-image-heart-disease-classifier
+    commands:
+    - pip install PyGithub==1.59.0 deepchecks==0.18.1 pandera==0.20.3
+    base_image: mlrun/mlrun
+    with_mlrun: false
+  load_source_on_run: true
+  source: v3io:///bigdata/testing1234.zip
+  params:
+    base_image: mlrun/mlrun
+    requirements_file: requirements.txt
+    force_build: false
+    source: v3io:///bigdata/testing1234.zip
+  owner: nick
+  default_image: .mlrun-project-image-heart-disease-classifier
+  desired_state: online

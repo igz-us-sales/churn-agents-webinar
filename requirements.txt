@@ -1,0 +1,7 @@
+PyGithub==1.59.0
+deepchecks==0.18.1
+pandera==0.20.3
+langchain==0.2.17
+langchain-core==0.2.43
+langchain-openai==0.1.25
+mlrun==1.7.0
