@@ -1,9 +1,23 @@
+metadata:
+  name: churn-agents-webinar
+  created: '2025-01-08T19:05:45.327000'
+kind: project
+status:
+  state: online
 spec:
-  load_source_on_run: true
+  desired_state: online
+  source: v3io:///bigdata/churn.zip
   workflows:
-  - path: src/workflows/train_and_deploy_workflow.py
-    name: main
-  default_image: .mlrun-project-image-churn-agents-webinar
+  - name: main
+    path: src/workflows/train_and_deploy_workflow.py
+  owner: nick
+  conda: ''
+  origin_url: git://github.com/igz-us-sales/churn-agents-webinar.git#refs/heads/master
+  params:
+    base_image: mlrun/mlrun
+    requirements_file: requirements.txt
+    force_build: false
+    source: v3io:///bigdata/churn.zip
   functions:
   - url: src/functions/data.py
     name: data
@@ -25,26 +39,12 @@ spec:
     name: model-server-tester
     kind: job
     handler: model_server_tester
-  origin_url: git://github.com/igz-us-sales/churn-agents-webinar.git#refs/heads/master
-  conda: ''
-  source: v3io:///bigdata/churn.zip
   build:
-    with_mlrun: false
     base_image: mlrun/mlrun
-    image: .mlrun-project-image-churn-agents-webinar
+    with_mlrun: false
     commands:
     - pip install PyGithub==1.59.0 deepchecks==0.18.1 pandera==0.20.3 langchain==0.2.17
       langchain-core==0.2.43 langchain-openai==0.1.25 mlrun==1.7.0
-  desired_state: online
-  params:
-    base_image: mlrun/mlrun
-    requirements_file: requirements.txt
-    force_build: false
-    source: v3io:///bigdata/churn.zip
-  owner: nick
-metadata:
-  created: '2025-01-08T19:05:45.327000'
-  name: churn-agents-webinar
-status:
-  state: online
-kind: project
+    image: .mlrun-project-image-churn-agents-webinar
+  default_image: .mlrun-project-image-churn-agents-webinar
+  load_source_on_run: true

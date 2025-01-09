@@ -1,4 +1,4 @@
-**IGZ Telecom Style Guide for Generating Promotional Email Offers**
+# IGZ Telecom Style Guide for Generating Promotional Email Offers
 
 ### Purpose
 
