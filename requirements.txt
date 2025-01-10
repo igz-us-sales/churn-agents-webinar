@@ -10,3 +10,4 @@ langchain-community==0.2.19
 unstructured==0.16.12
 markdown==3.7
 langgraph==0.2.6
+gradio==3.50.2
