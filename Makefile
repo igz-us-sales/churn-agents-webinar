@@ -4,7 +4,7 @@ PYTHON_INTERPRETER = python
 SHELL=/bin/bash -e
 SRC ?= src
 TESTS ?= tests
-CONDA_ENV ?= churn
+CONDA_ENV ?= churn-v2
 CONDA_PY_VER ?= 3.9
 CONDA_ACTIVATE = source $$(conda info --base)/etc/profile.d/conda.sh ; conda activate ; conda activate
 

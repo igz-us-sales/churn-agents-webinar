@@ -1,23 +1,28 @@
-metadata:
-  name: churn-agents-webinar
-  created: '2025-01-08T19:05:45.327000'
 kind: project
-status:
-  state: online
+metadata:
+  created: '2025-01-08T19:05:45.327000'
+  name: churn-agents-webinar
 spec:
+  load_source_on_run: true
   desired_state: online
-  source: v3io:///bigdata/churn.zip
-  workflows:
-  - name: main
-    path: src/workflows/train_and_deploy_workflow.py
-  owner: nick
-  conda: ''
-  origin_url: git://github.com/igz-us-sales/churn-agents-webinar.git#refs/heads/master
   params:
-    base_image: mlrun/mlrun
-    requirements_file: requirements.txt
+    base_image: mlrun/mlrun:1.7.2
+    requirements_file: requirements-churn-pipeline.txt
     force_build: false
     source: v3io:///bigdata/churn.zip
+  build:
+    image: .mlrun-project-image-churn-agents-webinar
+    base_image: mlrun/mlrun:1.7.2
+    with_mlrun: false
+    commands:
+    - pip install PyGithub==1.59.0 deepchecks==0.18.1 pandera==0.20.3 mlrun==1.7.2
+      transformers==4.48.1 datasets==3.2.0 torch==1.13.1
+  origin_url: git://github.com/igz-us-sales/churn-agents-webinar.git#refs/heads/master
+  owner: nick
+  conda: ''
+  workflows:
+  - path: src/workflows/train_and_deploy_workflow.py
+    name: main
   functions:
   - url: src/functions/data.py
     name: data
@@ -26,7 +31,7 @@ spec:
   - url: src/functions/train.py
     name: train
     kind: job
-    image: mlrun/mlrun
+    image: mlrun/mlrun:1.7.2
     handler: train_model
   - url: src/functions/validate.py
     name: validate
@@ -34,17 +39,12 @@ spec:
   - url: src/functions/v2_model_server.py
     name: serving
     kind: serving
-    image: mlrun/mlrun
+    image: mlrun/mlrun:1.7.2
   - url: src/functions/v2_model_tester.py
     name: model-server-tester
     kind: job
     handler: model_server_tester
-  build:
-    base_image: mlrun/mlrun
-    with_mlrun: false
-    commands:
-    - pip install PyGithub==1.59.0 deepchecks==0.18.1 pandera==0.20.3 langchain==0.2.17
-      langchain-core==0.2.43 langchain-openai==0.1.25 mlrun==1.7.0
-    image: .mlrun-project-image-churn-agents-webinar
   default_image: .mlrun-project-image-churn-agents-webinar
-  load_source_on_run: true
+  source: v3io:///bigdata/churn.zip
+status:
+  state: online

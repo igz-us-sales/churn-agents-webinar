@@ -4,14 +4,16 @@ from kfp import dsl
 
 @dsl.pipeline(name="GitOps Training Pipeline", description="Train a model")
 def pipeline(
-    source_url: str = "https://s3.wasabisys.com/iguazio/data/model-monitoring/iris_dataset.csv",
-    label_column: str = "label",
-    allow_validation_failure: bool = False,
-    sentiment_column: str = "sentiment_label",
-    ordinal_columns: list = "None",
-    drop_columns: list = "None",
-    test_size: float = 0.1,
-    model_name: str = "model"
+    source_url: str,
+    label_column: str,
+    allow_validation_failure: bool,
+    test_size: float,
+    model_name: str,
+    sentiment_model: str,
+    text_column: str,
+    sentiment_column: str,
+    ordinal_columns: list,
+    drop_columns: list,
 ):
     # Get our project object
     project = mlrun.get_current_project()
@@ -23,12 +25,27 @@ def pipeline(
         inputs={"data": source_url},
         outputs=["data"],
     )
+    
+    # Compute sentiment data
+    sentiment_fn = project.get_function("data")
+    sentiment_fn.with_requests(cpu=6)
+    sentiment_fn.with_limits(cpu=6)
+    sentiment = project.run_function(
+        sentiment_fn,
+        handler="sentiment_analysis",
+        inputs={"data": ingest.outputs["data"]},
+        params={
+            "sentiment_model": sentiment_model,
+            "text_column": text_column,
+        },
+        outputs=["data_w_sentiment"],
+    )
 
     # Validate data integrity
     validate_data_integrity = project.run_function(
         "validate",
         handler="validate_data_integrity",
-        inputs={"data": ingest.outputs["data"]},
+        inputs={"data": sentiment.outputs["data_w_sentiment"]},
         params={
             "label_column": label_column,
             "allow_validation_failure": allow_validation_failure,
@@ -40,7 +57,7 @@ def pipeline(
     process = project.run_function(
         "data",
         handler="process_data",
-        inputs={"data": ingest.outputs["data"]},
+        inputs={"data": sentiment.outputs["data_w_sentiment"]},
         params={
             "label_column": label_column,
             "test_size": test_size,
@@ -104,7 +121,6 @@ def pipeline(
 
     # Deploy model to endpoint
     serving_fn = project.get_function("serving")
-    # serving_fn.set_tracking()
     deploy = project.deploy_function(
         serving_fn,
         models=[
@@ -115,16 +131,3 @@ def pipeline(
             }
         ],
     ).after(validate_model)
-
-#     # Test model endpoint
-#     project.run_function(
-#         "model-server-tester",
-#         inputs={
-#             "table": process.outputs["test"],
-#         },
-#         params={
-#             "serving_fn_name": "serving",
-#             "label_column": label_column,
-#             "model": model_name,
-#         },
-#     ).after(deploy)
