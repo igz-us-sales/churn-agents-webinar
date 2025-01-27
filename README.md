@@ -130,3 +130,4 @@ Includes the following components:
 - [Building Effective Agents - Anthropic](https://www.anthropic.com/research/building-effective-agents)
 - [Agents - Chip Huyen](https://huyenchip.com/2025/01/07/agents.html)
 - [The DNA of AI Agents: Common Patterns in Recent Design Principles - Cedric Chee](https://cedricchee.com/blog/the-dna-of-ai-agents/)
+- [Churn Dataset source](https://github.com/aws-samples/churn-prediction-with-text-and-interpretability?tab=readme-ov-file#download-categoricalnumerical-data-and-combine-with-synthetic-text-data)
