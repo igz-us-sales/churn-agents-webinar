@@ -18,12 +18,16 @@ The goal is to:
 If you want to run `01_churn_ml_model.ipynb`,  `02_customer_insight_report.ipynb`, and `03_offer_generation_agent.ipynb`:
 1. [Install MLRun Community Edition on Kubernetes for Docker Desktop](https://docs.mlrun.org/en/latest/install/kubernetes.html)
 1. Clone [this repo](https://github.com/igz-us-sales/churn-agents-webinar) within the provisioned Jupyter service
-1. Within Jupyter service, create conda environment using `make conda-env`
+1. Within Jupyter service, create conda environment using `make conda-env` (or `make conda-env-uv` if you have `uv` installed for faster depdency resolution)
+1. Create `.env` file with your OpenAI credentials
+1. Create Jupyter kernel with `python -m ipykernel install --user --name churn-v2`
 1. Run notebooks in order (note: OpenAI credentials required to run `03_offer_generation_agent.ipynb`)
 
 If you just want to run `03_offer_generation_agent.ipynb`:
-1. Clone [this repo](https://github.com/igz-us-sales/churn-agents-webinar) within the provisioned Jupyter service
-1. Within your environment, create conda environment using `make conda-env`
+1. Clone [this repo](https://github.com/igz-us-sales/churn-agents-webinar) within your environment
+1. Within your environment, create conda environment using `make conda-env` (or `make conda-env-uv` if you have `uv` installed for faster depdency resolution)
+1. Create `.env` file with your OpenAI credentials
+1. Create Jupyter kernel with `python -m ipykernel install --user --name churn-v2`
 1. Run`03_offer_generation_agent.ipynb` (note: OpenAI credentials required)
 
 ## Modules
@@ -54,8 +58,7 @@ Create report on customer to be used as input to our offer generation and compli
 Example:
 ```python
 get_customer_insight_report(user_id=2296)
-```
-```json
+
 {
     'user_id': 460,
     'customer_name' : "Peggy",
