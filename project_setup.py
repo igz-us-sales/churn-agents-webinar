@@ -39,12 +39,11 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
             with_mlrun=False,
         )
 
-    # MLRun Functions - note that paths are relative to the project context (./src)
+    # MLRun Functions
     project.set_function(
         name="data",
         func="src/functions/data.py",
         kind="job",
-        with_repo=True
     )
     project.set_function(
         name="train",
@@ -69,7 +68,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
         handler="model_server_tester",
     )
 
-    # MLRun Workflows - note that paths are relative to the project context (./src)
+    # MLRun Workflows
     project.set_workflow("main", "src/workflows/train_and_deploy_workflow.py")
 
     # Save and return the project:

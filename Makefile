@@ -57,6 +57,15 @@ conda-env: ## Create a conda environment
 		conda create -n $(CONDA_ENV) -y python=$(CONDA_PY_VER) ipykernel graphviz pip protobuf=3.20.3; \
 	fi
 	@echo "Installing dependencies"
+	$(CONDA_ACTIVATE) $(CONDA_ENV); pip install -r requirements.txt -r requirements-dev.txt
+    
+.PHONY: conda-env-uv
+conda-env-uv: ## Create environment with conda and uv
+	@if ! conda env list | grep -q $(CONDA_ENV); then \
+		echo "Creating new conda environment $(CONDA_ENV)..."; \
+		conda create -n $(CONDA_ENV) -y python=$(CONDA_PY_VER) ipykernel graphviz pip protobuf=3.20.3; \
+	fi
+	@echo "Installing dependencies"
 	$(CONDA_ACTIVATE) $(CONDA_ENV); uv pip install -r requirements.txt -r requirements-dev.txt
     
 .PHONY: install-requirements
